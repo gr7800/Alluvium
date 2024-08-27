@@ -2,12 +2,11 @@ const Chat = require("../Models/chatModel");
 const User = require("../Models/userModel");
 
 // Access or create a one-to-one chat
-const accessChat = async (req, res) => {
+exports.accessChat = async (req, res) => {
   const { userId } = req.body;
 
   if (!userId) {
-    console.error("UserId parameter not sent with request");
-    return res.status(400).send({ message: "UserId param not sent with request" });
+    return res.status(400).send({ message: "UserId parameter not sent with request" });
   }
 
   try {
@@ -48,7 +47,7 @@ const accessChat = async (req, res) => {
 };
 
 // Fetch all chats for the logged-in user
-const fetchChats = async (req, res) => {
+exports.fetchChats = async (req, res) => {
   try {
     let chats = await Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
       .populate("users", "-password")
@@ -69,7 +68,7 @@ const fetchChats = async (req, res) => {
 };
 
 // Create a new group chat
-const createGroupChat = async (req, res) => {
+exports.createGroupChat = async (req, res) => {
   const { users: usersJson, name } = req.body;
 
   if (!usersJson || !name) {
@@ -109,7 +108,7 @@ const createGroupChat = async (req, res) => {
 };
 
 // Rename an existing group chat
-const renameGroup = async (req, res) => {
+exports.renameGroup = async (req, res) => {
   const { chatId, chatName } = req.body;
 
   try {
@@ -133,7 +132,7 @@ const renameGroup = async (req, res) => {
 };
 
 // Add a user to a group chat
-const addToGroup = async (req, res) => {
+exports.addToGroup = async (req, res) => {
   const { chatId, userId } = req.body;
 
   try {
@@ -157,7 +156,7 @@ const addToGroup = async (req, res) => {
 };
 
 // Remove a user from a group chat
-const removeFromGroup = async (req, res) => {
+exports.removeFromGroup = async (req, res) => {
   const { chatId, userId } = req.body;
 
   try {
@@ -178,13 +177,4 @@ const removeFromGroup = async (req, res) => {
     console.error("Error removing user from group:", error);
     return res.status(500).send({ message: "Failed to remove user from group" });
   }
-};
-
-module.exports = {
-  accessChat,
-  fetchChats,
-  createGroupChat,
-  renameGroup,
-  addToGroup,
-  removeFromGroup,
 };

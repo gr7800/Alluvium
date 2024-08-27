@@ -15,22 +15,25 @@ const ScrollableChat = ({ messages }) => {
     <ScrollableFeed>
       {messages &&
         messages.map((m, i) => (
-          <div className="flex" key={m._id}>
+          <div
+            className={`flex ${m.sender._id === user._id ? 'justify-end' : 'justify-start'
+              }`}
+            key={m._id}
+          >
             {(isSameSender(messages, m, i, user._id) ||
               isLastMessage(messages, i, user._id)) && (
-              <div className="tooltip-bottom-start" data-tooltip={m.sender.name}>
-                <img
-                  className="w-8 h-8 mt-[7px] mr-1 rounded-full cursor-pointer"
-                  src={m.sender.pic}
-                  alt={m.sender.name}
-                  title={m.sender.name}
-                />
-              </div>
-            )}
+                <div className="tooltip-bottom-start" data-tooltip={m.sender.name}>
+                  <img
+                    className="w-8 h-8 mt-[7px] mr-1 rounded-full cursor-pointer"
+                    src={m.sender.pic}
+                    alt={m.sender.name}
+                    title={m.sender.name}
+                  />
+                </div>
+              )}
             <span
-              className={`${
-                m.sender._id === user._id ? 'bg-blue-200' : 'bg-green-200'
-              } 
+              className={`${m.sender._id === user._id ? 'bg-blue-200' : 'bg-green-200'
+                } 
                 ${isSameSenderMargin(messages, m, i, user._id)} 
                 ${isSameUser(messages, m, i, user._id) ? 'mt-[3px]' : 'mt-[10px]'}
                 rounded-2xl px-4 py-2 max-w-[75%]`}

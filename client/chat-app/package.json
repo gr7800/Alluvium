@@ -4,10 +4,6 @@
   "private": true,
   "proxy": "http://127.0.0.1:8080",
   "dependencies": {
-    "@chakra-ui/icons": "^2.1.1",
-    "@chakra-ui/react": "^2.8.2",
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
     "@heroicons/react": "^1.0.6",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.2",

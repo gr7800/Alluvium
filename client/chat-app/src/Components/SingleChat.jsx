@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import { ChatState } from "../Context/ChatProvider";
 import axios from "axios";
 import { getSender } from "../Config/ChatLogics";
-import UpdateGroupChatModal from "./misc/UpdateGroupChatModal";
+import UpdateGroupChatModal from "./Model/UpdateGroupChatModal";
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
 import Lottie from "react-lottie";
 import animationData from "../Animations/typing.json";
 import { ToastContainer, toast } from "react-toastify";
-import { ArrowLeftIcon } from "@heroicons/react/solid"; // Heroicons for icons
+import { ArrowLeftIcon, PaperAirplaneIcon } from "@heroicons/react/solid"; // Heroicons for icons
 import { BaseUrl } from "../Config/Constant";
 
-const ENDPOINT = BaseUrl||"http://localhost:8080";
+const ENDPOINT = BaseUrl || "http://localhost:8080";
 
 let socket, selectedChatCompare;
 
@@ -96,8 +96,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     });
   });
 
-  const sendMessage = async (event) => {
-    if (event.key === "Enter" && newMessage) {
+  const sendMessage = async () => {
+    if (newMessage) {
       socket.emit("stop typing", selectedChat._id);
       try {
         const config = {
@@ -184,7 +184,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               </div>
             )}
 
-            <div className="mt-3">
+            <div className="mt-3 flex items-center">
               {istyping && (
                 <div className="mb-3">
                   <Lottie options={defaultOptions} width={70} />
@@ -196,8 +196,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 className="w-full p-2 bg-gray-300 rounded-lg"
                 value={newMessage}
                 onChange={typingHandler}
-                onKeyDown={sendMessage}
+                onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               />
+              <button
+                onClick={sendMessage}
+                className="ml-2 p-2 bg-blue-500 rounded-full hover:bg-blue-600"
+              >
+                <PaperAirplaneIcon className="h-6 w-6 text-white rotate-90" />
+              </button>
             </div>
           </div>
         </div>

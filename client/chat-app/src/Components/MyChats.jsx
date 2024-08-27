@@ -4,7 +4,7 @@ import axios from "axios";
 import { PlusIcon } from "@heroicons/react/solid"; // Import Heroicons for icons
 import ChatLoading from "../Components/ChatLoading";
 import { getSender } from "../Config/ChatLogics";
-import GroupChatModal from "./misc/GroupChatModal";
+import GroupChatModal from "./Model/GroupChatModal";
 import { BaseUrl } from "../Config/Constant";
 
 const MyChats = ({ fetchAgain }) => {

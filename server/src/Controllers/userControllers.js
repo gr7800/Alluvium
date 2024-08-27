@@ -1,7 +1,8 @@
 const User = require("../Models/userModel");
 const generateToken = require("../Config/generateToken");
 
-const registerUser = async (req, res) => {
+// Register User
+exports.registerUser = async (req, res) => {
   try {
     const { name, email, password, pic } = req.body;
 
@@ -23,7 +24,7 @@ const registerUser = async (req, res) => {
     });
 
     if (user) {
-      return res.status(201).json({
+      return res.status(200).json({
         _id: user._id,
         name: user.name,
         email: user.email,
@@ -40,7 +41,8 @@ const registerUser = async (req, res) => {
   }
 };
 
-const authUser = async (req, res) => {
+// Authenticate User
+exports.authUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -64,7 +66,8 @@ const authUser = async (req, res) => {
   }
 };
 
-const allUsers = async (req, res) => {
+// Get All Users
+exports.allUsers = async (req, res) => {
   try {
     const keyword = req.query.search
       ? {
@@ -82,5 +85,3 @@ const allUsers = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
-
-module.exports = { registerUser, authUser, allUsers };

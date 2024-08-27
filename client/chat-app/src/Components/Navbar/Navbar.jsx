@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BellIcon, ChevronDownIcon } from "@heroicons/react/outline";
 import { ChatState } from "../../Context/ChatProvider";
@@ -9,9 +9,9 @@ import UserListItem from "../UserAvatar/UserListItem";
 import { getSender } from "../../Config/ChatLogics";
 import NotificationBadge from "react-notification-badge";
 import { Effect } from "react-notification-badge";
-import logo from "../../images/logo.jpg"
+import logo from "../../images/logo.jpg";
 import { BaseUrl } from "../../Config/Constant";
-
+import UserProfileModal from "../Model/UserProfileModal";
 const Navbar = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -20,6 +20,7 @@ const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isUserProfileOpen, setIsUserProfileOpen] = useState(false); // State for controlling the modal
 
   const navigate = useNavigate();
   const {
@@ -50,8 +51,6 @@ const Navbar = () => {
         },
       };
       const { data } = await axios.get(`${BaseUrl}/api/user?search=${search}`, config);
-
-      // console.log(data)
 
       setLoading(false);
       setSearchResult(data);
@@ -96,7 +95,9 @@ const Navbar = () => {
           </button>
         </div>
         <div className="text-center">
-          <img src={logo} alt="Logo" className="mx-auto pb-2" width="150px" />
+          <Link to={"/"}>
+            <img src={logo} alt="Logo" className="mx-auto pb-2" width="150px" />
+          </Link>
         </div>
         <div className="flex items-center relative">
           <div
@@ -143,7 +144,9 @@ const Navbar = () => {
             onMouseEnter={() => setIsProfileMenuOpen(true)}
             onMouseLeave={() => setIsProfileMenuOpen(false)}
           >
-            <button className="flex items-center bg-white text-gray-600 hover:text-gray-900">
+            <button
+              className="flex items-center bg-white text-gray-600 hover:text-gray-900"
+            >
               <img
                 className="w-8 h-8 rounded-full"
                 src={user.pic}
@@ -153,7 +156,10 @@ const Navbar = () => {
             </button>
             {isProfileMenuOpen && (
               <div className="absolute right-0 w-48 bg-white shadow-lg rounded-md z-10">
-                <button className="w-full text-left p-2 hover:bg-gray-100">
+                <button
+                  className="w-full text-left p-2 hover:bg-gray-100"
+                  onClick={() => setIsUserProfileOpen(true)} // Open the modal on "My Profile" click
+                >
                   My Profile
                 </button>
                 <div className="border-t"></div>
@@ -205,7 +211,7 @@ const Navbar = () => {
               {loading ? (
                 <ChatLoading />
               ) : (
-                searchResult.length>0 && searchResult?.map((user) => (
+                searchResult.map((user) => (
                   <UserListItem
                     key={user._id}
                     user={user}
@@ -213,15 +219,18 @@ const Navbar = () => {
                   />
                 ))
               )}
-              {loadingChat && (
-                <div className="flex justify-center mt-4">
-                  <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"></div>
-                </div>
-              )}
+              {loadingChat && <ChatLoading />}
             </div>
           </div>
         </div>
       )}
+
+      {/* User Profile Modal */}
+      <UserProfileModal
+        user={user}
+        isOpen={isUserProfileOpen}
+        onClose={() => setIsUserProfileOpen(false)}
+      />
     </>
   );
 };
